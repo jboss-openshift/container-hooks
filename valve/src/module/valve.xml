@@ -1,0 +1,2 @@
+<valve name="ce_requests_valve" module="org.jboss.ce.chooks.valve" class-name="org.jboss.ce.chooks.valve.RequestsValve"
+       enabled="true"/>

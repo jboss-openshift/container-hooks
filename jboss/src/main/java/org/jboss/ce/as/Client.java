@@ -9,6 +9,7 @@ import static org.jboss.as.controller.client.helpers.ClientConstants.SUBSYSTEM;
 import java.io.IOException;
 
 import org.jboss.as.controller.client.ModelControllerClient;
+import org.jboss.ce.chooks.valve.RequestsValve;
 import org.jboss.dmr.ModelNode;
 
 /**
@@ -38,8 +39,13 @@ class Client {
         }
     }
 
+    long getActiveRequests() throws IOException {
+        return RequestsValve.getCounter() - 1;
+    }
+    // -----------------------------
+
     // TODO -- this is not the right stat ...
-    int getActiveRequests() throws IOException {
+    int __getActiveRequests() throws IOException {
         ModelNode request = new ModelNode();
         request.get(OP).set(READ_RESOURCE_OPERATION);
         request.get(INCLUDE_RUNTIME).set(true);

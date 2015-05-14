@@ -57,7 +57,10 @@ public class HookServlet extends HttpServlet {
     }
 
     private boolean isInProgress() throws IOException {
-        int requests = getClient().getActiveRequests();
+        long requests = getClient().getActiveRequests();
+
+        log(String.format("Requests # - %s", requests));
+
         //noinspection RedundantIfStatement
         if (requests > 0) {
             return true;
