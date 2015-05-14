@@ -21,6 +21,8 @@
 
     <!-- Properties -->
     <properties>
+        <version.jboss>7.2.0.Final</version.jboss>
+        <version.msc>1.0.2.GA</version.msc>
         <version.meta-inf>1.1</version.meta-inf>
         <version.servlet-api>3.0.1</version.servlet-api>
         <version.junit>4.10</version.junit>
@@ -31,7 +33,7 @@
     <modules>
         <module>example</module>
         <!-- module>web</module -->
-        <!-- module>wildfly</module -->
+        <module>jboss</module>
     </modules>
 
     <!-- Maven 2 Repositories -->
@@ -69,16 +71,34 @@
         <dependencies>
 
             <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller-client</artifactId>
+                <version>${version.jboss}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller</artifactId>
+                <version>${version.jboss}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-server</artifactId>
+                <version>${version.jboss}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.msc</groupId>
+                <artifactId>jboss-msc</artifactId>
+                <version>${version.msc}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
                 <artifactId>metainf-services</artifactId>
                 <version>${version.meta-inf}</version>
                 <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss</groupId>
-                <artifactId>jboss-dmr</artifactId>
-                <version>${version.dmr}</version>
             </dependency>
 
             <dependency>
