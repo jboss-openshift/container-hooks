@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
+import javax.management.MBeanServer;
+
 import org.jboss.as.controller.ModelController;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.as.server.Services;
@@ -32,23 +34,31 @@ public class ManagementService implements ServiceActivator {
     private static volatile ModelController controller;
     private static volatile ExecutorService executor;
 
+    private static volatile MBeanServer mbeanServer;
+
     static ModelControllerClient getClient() {
         return controller.createClient(executor);
+    }
+
+    static MBeanServer getMBeanServer() {
+        return mbeanServer;
     }
 
     public void activate(ServiceActivatorContext context) throws ServiceRegistryException {
         log.info("[Hook] Activating management service ...");
 
-        final GetModelControllerService service = new GetModelControllerService();
+        final GetManagementService service = new GetManagementService();
         context
             .getServiceTarget()
             .addService(ServiceName.of("management", "client", "getter"), service)
             .addDependency(Services.JBOSS_SERVER_CONTROLLER, ModelController.class, service.modelControllerValue)
+            .addDependency(ServiceName.JBOSS.append("mbean", "server"), MBeanServer.class, service.mbeanServerValue)
             .install();
     }
 
-    private class GetModelControllerService implements Service {
+    private class GetManagementService implements Service {
         private InjectedValue<ModelController> modelControllerValue = new InjectedValue<>();
+        private InjectedValue<MBeanServer> mbeanServerValue = new InjectedValue<>();
 
         public Void getValue() throws IllegalStateException, IllegalArgumentException {
             return null;
@@ -64,6 +74,10 @@ public class ManagementService implements ServiceActivator {
                 }
             });
             controller = modelControllerValue.getValue();
+
+            mbeanServer = mbeanServerValue.getValue();
+
+            log.info("[Hook] Management service started ...");
         }
 
         public void stop(StopContext context) {
@@ -72,6 +86,7 @@ public class ManagementService implements ServiceActivator {
             } finally {
                 executor = null;
                 controller = null;
+                mbeanServer = null;
             }
         }
     }
