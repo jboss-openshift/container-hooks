@@ -43,6 +43,27 @@ public class HookServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log("HOOOOOOK!");
 
+        String bp = req.getParameter("blocking");
+        boolean blocking = bp == null || Boolean.parseBoolean(bp);
+
+        if (blocking) {
+            doBlocking();
+        } else {
+            doCheckProgressState(req, resp);
+        }
+    }
+
+    private void doCheckProgressState(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        long requests = getClient().getActiveRequests();
+
+        log(String.format("[ProgressCheck] Requests # - %s", requests));
+
+        String result = String.format("{\"progress_count\" : %s}", requests);
+        resp.setContentType("application/json");
+        resp.getWriter().write(result);
+    }
+
+    private void doBlocking() throws IOException {
         long time = 0;
         while (isInProgress() && time < gracePeriod) {
             try {
@@ -59,7 +80,7 @@ public class HookServlet extends HttpServlet {
     private boolean isInProgress() throws IOException {
         long requests = getClient().getActiveRequests();
 
-        log(String.format("Requests # - %s", requests));
+        log(String.format("[Blocking] Requests # - %s", requests));
 
         //noinspection RedundantIfStatement
         if (requests > 0) {
