@@ -58,7 +58,7 @@ public class HookServlet extends HttpServlet {
 
         log(String.format("[ProgressCheck] Requests # - %s", requests));
 
-        String result = String.format("{\"progress_count\" : %s}", requests);
+        String result = String.format("{\"process_count\" : %s}", requests);
         resp.setContentType("application/json");
         resp.getWriter().write(result);
     }
