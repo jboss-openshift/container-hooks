@@ -28,7 +28,7 @@
         <version.servlet-api>3.0.1</version.servlet-api>
         <version.junit>4.10</version.junit>
         <version.dmr>1.2.5.Final</version.dmr>
-        <version.undertow>1.2.0.Final</version.undertow>
+        <version.undertow>2.2.11.Final</version.undertow>
     </properties>
 
     <modules>
